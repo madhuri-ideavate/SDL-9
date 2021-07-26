@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * A description of what your module does.
+ */
+function mylog_install()
+{
+  // print_r("test");
+  // drupal_flush_all_caches();
+}
+
+/**
+ * Log excecuted information in file
+ * @param  array  $error_log [This is an array of infoamtion that user want to check in log file]
+ * @return [true]            
+ */
+function write_logs($error_log = array())
+{
+  global $user, $base_url, $base_path;
+
+  // $error_log['user_id'] = $user->uid;
+  $border = PHP_EOL . str_repeat("+", 120) . PHP_EOL;
+  //  $error_log .= $border .' '.date("Y-m-d--h-i").PHP_EOL;
+  if (is_array($error_log))
+    $error_log .= print_r($error_log, TRUE);
+  else
+    $error_log .= ' LOG : ' . $error_log . $border . PHP_EOL;
+  //Save string to log in drupal root, use FILE_APPEND to append.
+  file_put_contents(DRUPAL_ROOT . '/tmp/site_log.txt', $error_log, FILE_APPEND);
+  return true;
+}

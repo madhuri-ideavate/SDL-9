@@ -1,0 +1,5 @@
+tmgmt_sdllc.job_overview:
+  title: 'Job Overview'
+  description: 'Manage all the provider jobs'
+  parent: tmgmt.admin_tmgmt
+  route_name: tmgmt_sdllc.tmgmt_sdllc_job_overview

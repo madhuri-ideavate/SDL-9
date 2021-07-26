@@ -1,0 +1,25 @@
+[08-Oct-2018 08:09:53] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: 
+[08-Oct-2018 08:10:12] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: 
+[08-Oct-2018 08:10:43] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: 
+[08-Oct-2018 08:24:08] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: 
+[08-Oct-2018 08:25:09] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:30:00] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:30:28] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:32:25] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:32:45] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:32:52] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:33:22] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:34:06] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 08:34:18] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[08-Oct-2018 09:04:41] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Bad Request
+[08-Oct-2018 09:06:57] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: No value for Message
+[08-Oct-2018 09:08:05] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: No value for Message
+[08-Oct-2018 09:08:23] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: No value for Message
+[08-Oct-2018 09:11:18] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: 
+[08-Oct-2018 09:11:32] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: 
+[08-Oct-2018 09:18:50] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: The user name or password is incorrect.
+[08-Oct-2018 09:20:02] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: The user name or password is incorrect.
+[08-Oct-2018 09:22:08] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: The user name or password is incorrect.
+[08-Oct-2018 09:22:58] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: The user name or password is incorrect.
+[08-Oct-2018 09:25:09] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: The user name or password is incorrect.
+[08-Oct-2018 14:18:49] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: The user name or password is incorrect.

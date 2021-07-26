@@ -1,0 +1,1 @@
+[08-Oct-2018 08:32:25] [localhost/MantraLibrary/Test.php] : [ERROR] - Failed to get authorization token for . Detailed error: Failed to get authorization token

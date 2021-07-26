@@ -1,0 +1,46 @@
+table.tmgmt-sdllc-project-info td:nth-child(4) {
+  text-align: right;
+}
+
+table.tmgmt-sdllc-project-info td:nth-child(odd) {
+  font-weight: bold;
+  width: 15%;
+}
+
+table.tmgmt-sdllc-description-info td:nth-child(odd) {
+  font-weight: bold;
+  width: 15%;
+}
+
+table.tmgmt-sdllc-cost-summary td:nth-child(even) {
+  text-align: right;
+}
+
+table.tmgmt-sdllc-cost-summary tr:last-child {
+  font-weight: bold;
+}
+
+.joboverview-table-page .clear .filter-wrapper {
+  margin: 10px;
+  float: left;
+}
+
+.joboverview-table-page .clear .filter-label {
+  display: block;
+}
+
+.joboverview-table-page .clear select {
+  width: 300px;
+}
+
+.joboverview-table-page #datatable_length {
+  clear: both;
+}
+
+.joboverview-table-page .dataTables_length {
+  clear: both;
+}
+
+.joboverview-table-page .dataTables_filter {
+  display: none;
+}

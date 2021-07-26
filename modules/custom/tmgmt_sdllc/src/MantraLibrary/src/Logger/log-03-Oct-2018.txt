@@ -1,0 +1,4 @@
+[03-Oct-2018 15:07:38] [localhost/MantraLibrary/Services/Transaction/AuthService.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: @error
+[03-Oct-2018 15:08:43] [localhost/MantraLibrary/Services/Transaction/AuthService.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[03-Oct-2018 15:09:09] [localhost/MantraLibrary/Services/Transaction/AuthService.php] : [ERROR] - Failed to get authorization token for iflorian@sdl.com. Detailed error: Invalid client credentials supplied.
+[03-Oct-2018 15:09:20] [localhost/MantraLibrary/Services/Transaction/AuthService.php] : [ERROR] - Failed to get authorization token for florian@sdl.com. Detailed error: The user name or password is incorrect.

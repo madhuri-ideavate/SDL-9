@@ -1,0 +1,5 @@
+services:
+  tmgmt_sdllc.breadcrumb:
+    class: Drupal\tmgmt_sdllc\Menu\SdllcBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 101 }

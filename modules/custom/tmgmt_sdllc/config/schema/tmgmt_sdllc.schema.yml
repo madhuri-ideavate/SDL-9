@@ -1,0 +1,25 @@
+tmgmt.translator.settings.sdllc:
+  type: tmgmt.translator_base
+  mapping:
+    sdllc_url:
+      type: string
+      label: 'SDL Language Cloud URL'
+      default: 'https://languagecloud.sdl.com'
+    sdllc_client_id:
+      type: string
+      label: 'Client ID'
+    sdllc_client_secret:
+      type: string
+      label: 'Client Secret'
+    sdllc_username:
+      type: string
+      label: 'SDL Language Cloud Username'
+    sdllc_password:
+      type: string
+      label: 'SDL Language Cloud Password'
+    # sdllc_project_options_id:
+    #   type: string
+    #   label: 'SDL Language Cloud Project Creation Options ID'
+    sdllc_project_options:
+      type: string
+      label: 'SDL Language Cloud Project Creation Options Name'

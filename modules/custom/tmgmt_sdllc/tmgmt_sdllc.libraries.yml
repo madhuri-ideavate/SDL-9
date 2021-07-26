@@ -1,0 +1,16 @@
+jobinfo:
+  css:
+    theme:
+      css/tmgmt_sdllc.jobinfo.css: {}
+  js:
+    js/joboverview.js: {}
+datatables_tabletools_extra:
+  version: 1.1.4
+  js:
+    /libraries/datatables/extras/ColReorder/media/js/ColReorder.js: {}
+  css:
+    component:
+      /libraries/datatables/extras/ColReorder/media/css/ColReorder.css: {}
+  dependencies:
+    - core/jquery
+    - datatables/datatables_core

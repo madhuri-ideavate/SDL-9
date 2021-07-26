@@ -1,0 +1,23 @@
+entity.tmgmt_translator.job_collection:
+  path: '/admin/tmgmt/translators/manage/{tmgmt_translator}/jobs-overview/{tmgmt_id}'
+  defaults:
+    _controller: 'Drupal\tmgmt_sdllc\Controller\JobsOverviewController::jobOverView'
+    _title: 'Jobs overview'
+  requirements:
+    _entity_create_access: tmgmt_translator
+
+tmgmt_sdllc.settings:
+  path: '/admin/tmgmt/translators/manage/{tmgmt_translator}/autoretrieval-setting'
+  defaults:
+    _form: '\Drupal\tmgmt_sdllc\Form\AutoRetrievalSettingsForm'
+    _title: 'Auto Retrieval settings'
+  requirements:
+    _entity_create_access: tmgmt_translator
+
+tmgmt_sdllc.tmgmt_sdllc_job_overview:
+  path: '/admin/tmgmt/translators/manage/job-overview'
+  defaults:
+    _form: '\Drupal\tmgmt_sdllc\Form\JobOverviewForm'
+    _title: 'Job Overview'
+  requirements:
+    _entity_create_access: tmgmt_translator

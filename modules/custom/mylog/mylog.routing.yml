@@ -1,0 +1,7 @@
+mylog.test:
+  path: /test
+  defaults:
+    _title: 'Remote Callback'
+    _controller: '\Drupal\mylog\Controller\LogController::test'
+  requirements:
+    _access: 'TRUE'

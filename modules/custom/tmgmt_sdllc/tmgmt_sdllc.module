@@ -1,0 +1,531 @@
+<?php
+
+/**
+ * @file
+ * Contains.
+ */
+use Drupal\tmgmt_sdllc\Plugin\tmgmt\Translator\SdllcTranslator;
+use Drupal\tmgmt\JobInterface;
+use Drupal\tmgmt_sdllc\Mantra\Model\PortalJobParams;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\tmgmt\Entity\Job;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\tmgmt_sdllc\Mantra\Model\ProjectId;
+use Drupal\tmgmt_sdllc\Helper\LanguageMapHelper;
+use Drupal\tmgmt_sdllc\Helper\FileHelper;
+use Drupal\tmgmt_sdllc\MantraLibrary\MantraTranslationAPI;
+use Drupal\tmgmt_sdllc\Logger\LogWriter;
+
+/**
+ * Retrieves the Project Creation Options information.
+ */
+function sdllc_helper_get_project_creation_options($credentials)
+{
+    LogWriter::info('Start to make api call to get project options');
+    try {
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($credentials->username, $credentials->password, $credentials->clientId, $credentials->clientSecret, $credentials->sdllcUrl);
+        $project_options = $sdllc_client->getProjectCreationOptions();
+    } catch (\Exception $e) {
+        LogWriter::error('Failed to get project options for username: ' . $credentials->username . 'with message: ' . $e->getMessage());
+
+        throw new \Exception('Failed to get project options: ' . $e->getMessage(), 0, $e);
+        return;
+    }
+    LogWriter::info('Finished to make api call to get project options');
+
+    return $project_options;
+}
+
+/**
+ * Uploads source files before creating a SDL Language Cloud project.
+ */
+function sdllc_helper_upload_source_file($client_id, $client_secret, $username, $password, $sdllc_url, $project_options_id, array $files)
+{
+    try {
+
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+        $uploaded_files = [];
+
+        $split_files = FileHelper::sdllc_helper_split_files($files);
+
+        foreach ($split_files as $split) {
+            $uploaded_split = $sdllc_client->uploadFile($project_options_id, $split);
+
+            if (count($uploaded_split) > 0) {
+                $uploaded_files = array_merge($uploaded_files, $uploaded_split);
+            }
+        }
+    } catch (\Exception $e) {
+
+      \Drupal::messenger()->addMessage(t('Failed to upload files. Error: @error', [
+            '@error' => $e->getMessage()
+        ]), 'error');
+        return NULL;
+    }
+
+    return $uploaded_files;
+}
+
+/**
+ * Creates a SDL Language Cloud project.
+ */
+function sdllc_helper_create_project($username, $password, $client_id, $client_secret, $sdllc_url, $job_params)
+{
+    try {
+
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+
+        $create_project_response = $sdllc_client->createProject($job_params->project_options_id, $job_params->name, $job_params->description, $job_params->dueDate, $job_params->srcLang, $job_params->fileIds, $job_params->targetLanguage);
+    } catch (\Exception $e) {
+        throw $e;
+        return NULL;
+    }
+
+    return $create_project_response;
+}
+
+function generateCallTrace()
+{
+    $e = new \Exception();
+    $trace = explode("\n", $e->getTraceAsString());
+    // reverse array to make steps line up chronologically
+    $trace = array_reverse($trace);
+    array_shift($trace); // remove {main}
+    array_pop($trace); // remove call to this method
+    $length = count($trace);
+    $result = array();
+
+    for ($i = 0; $i < $length; $i ++) {
+        $result[] = ($i + 1) . ')' . substr($trace[$i], strpos($trace[$i], ' ')); // replace '#someNum' with '$i)', set the right ordering
+    }
+
+    return "\t" . implode("\n\t", $result);
+}
+
+/**
+ * Creates a SDL Language Cloud project.
+ *
+ * TODO: remove this function. This is not user right now
+ */
+function sdllc_helper_create_batch_project($jobs)
+{
+    if (empty($jobs)) {
+      \Drupal::messenger()->addMessage(t('Something went wrong, please resubmit the translation'), 'error');
+        return new RedirectResponse(\Drupal\Core\Url::fromRoute('tmgmt.source_overview'));
+    }
+    $target_language = [];
+    $file_ids = [];
+    foreach ($jobs as $job) {
+        $sample_portal_job_param = $job[0]['job_param'];
+        $main_job_param = $job[0]['job'];
+        foreach ($job as $item) {
+            $current_fileids = $item['job_param']->getFileIds();
+            if (! in_array($current_fileids[0]['targets'][0], $target_language)) {
+                $target_language[] = $current_fileids[0]['targets'][0];
+            }
+            foreach ($item['job_files'] as $job_file) {
+                $key = str_replace(' ', '_', $job_file->getFileName());
+                $file_ids[$key] = $job_file;
+            }
+        }
+    }
+    $file_ids = array_values($file_ids);
+
+    $client_id = $main_job_param->getSetting('sdllc_client_id');
+    $client_secret = $main_job_param->getSetting('sdllc_client_secret');
+    $username = $main_job_param->getSetting('sdllc_username');
+    $password = $main_job_param->getSetting('sdllc_password');
+    $sdllc_url = $main_job_param->getSetting('sdllc_url');
+    $suppress_option = $main_job_param->getTranslator()->getSetting('sdllc_suppress_check');
+    $sdllc_client = new SdlMantraApi($username, $password, $client_id, $client_secret, $sdllc_url);
+    $token_response = $sdllc_client->getAuthorizationToken();
+
+    if (! $sdllc_client->isError()) {
+        $job->setState(Job::STATE_UNPROCESSED, 'Error submitting jobs. Failed to create SDL Translation Management project.');
+      \Drupal::messenger()->addMessage(t('Failed to retrieve AuthorizationToken for @username Error: @error', [
+            '@username' => $username,
+            '@error' => $sdllc_client->getLastError()
+        ]), 'error');
+        return NULL;
+    }
+
+    $job_params = new PortalJobParams();
+    $job_params->setJobOptions($sample_portal_job_param->getJobOptions());
+    $job_params->setName($sample_portal_job_param->getName());
+    $job_params->setDescription($sample_portal_job_param->getDescription());
+    $job_params->setDueDate($sample_portal_job_param->getDueDate());
+    $job_params->setSrcLang($sample_portal_job_param->getSrcLang());
+    $job_params->setFileIds($file_ids, $target_language);
+
+    $create_project_response = $sdllc_client->createProject($token_response, $job_params);
+
+    if (! $sdllc_client->isError()) {
+      \Drupal::messenger()->addMessage(t('Failed to create project. Error: @error', [
+            '@error' => $sdllc_client->getLastError()
+        ]), 'error');
+        return NULL;
+    }
+
+    if (! isset($create_project_response) && ! $create_project_response->getProjectId()) {
+        $job->setState(Job::STATE_UNPROCESSED, 'Error submitting jobs. Failed to create SDL Translation Management project.');
+        return;
+    }
+
+    foreach ($jobs as $job) {
+        foreach ($job as $item) {
+            $portal_job = $item['job'];
+
+            $projectCreationResponse = $create_project_response->getProjectId();
+
+            if ($portal_job->isContinuous()) {
+                $listOfProjectIds = [];
+
+                $items = $job[0]["job"]->getItems();
+                $item = end($items);
+                $nodeId = $item->id();
+
+                $project = new ProjectId();
+                $project->projectId = $projectCreationResponse;
+                $project->nodeId = $nodeId;
+                $project->status = 'Pending';
+
+                $jobSettings = $portal_job->getSetting('sdllc_project_id');
+
+                if ($jobSettings == NULL) {
+                    array_push($listOfProjectIds, $project);
+                } else {
+                    $listOfProjectIds = json_decode($jobSettings);
+
+                    array_push($listOfProjectIds, $project);
+                }
+
+                $projectCreationResponse = json_encode($listOfProjectIds);
+            }
+
+            $portal_job->get('settings')->__set('sdllc_project_id', $projectCreationResponse);
+            $portal_job->get('settings')->__set('sdllc_suppress_check', $suppress_option);
+
+            $portal_job->submitted('Job submitted. SDL Translation Management ID: @id', [
+                '@id' => $create_project_response->getProjectId()
+            ]);
+        }
+    }
+
+    return $create_project_response;
+}
+
+/**
+ * Retrieves the project status.
+ */
+function sdllc_helper_get_project_status($client_id, $client_secret, $username, $password, $sdllc_url, $project_id)
+{
+    try {
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+
+        $project_status = $sdllc_client->getProjectStatus($project_id);
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addMessage(t('Failed to get project status. Error: @error', [
+            '@error' => $e->getMessage()
+        ]), 'error');
+        return NULL;
+    }
+
+    return $project_status;
+}
+
+/**
+ * Download the project quote.
+ */
+function sdllc_helper_download_project_quote($client_id, $client_secret, $username, $password, $sdllc_url, $project_id, $quote_file_path)
+{
+    try {
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+
+        $project_quote = $sdllc_client->getProjectQuote($project_id);
+        $saved_file_path = file_save_data($project_quote, $quote_file_path, FILE_EXISTS_REPLACE);
+
+      \Drupal::messenger()->addMessage(t('Translation quote downloaded successfully. Quote file can be retrieved <a href="@link">here</a>.', [
+            '@link' => file_create_url($quote_file_path)
+        ]), 'status');
+
+        return $saved_file_path;
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addMessage(t('Failed to save quote to file. Error: @error', [
+            '@error' => $e->getMessage()
+        ]), 'error');
+        return NULL;
+    }
+
+    return $saved_file_path;
+}
+
+/**
+ * Download the target files (as a zip)
+ */
+function sdllc_helper_download_target($client_id, $client_secret, $username, $password, $sdllc_url, $project_id, $target_file_path)
+{
+    try {
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+
+        $target_zip = $sdllc_client->downloadTargetZip($project_id);
+
+        $saved_file_path = file_save_data($target_zip, $target_file_path, FILE_EXISTS_REPLACE);
+
+        if (! $saved_file_path) {
+            throw new \Exception('The files were not saved');
+            return;
+        }
+        return $saved_file_path;
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addMessage(t('Failed to retrieve to translated File. Error: @error', [
+            '@error' => $e->getMessage()
+        ]), 'error');
+        return NULL;
+    }
+}
+
+/**
+ * Download the target file (no zip)
+ */
+function sdllc_helper_download_target_no_zip($client_id, $client_secret, $username, $password, $sdllc_url, $project_id, array $file_ids, $target_file_path)
+{
+    try {
+        if (count($file_ids) < 1) {
+            throw new \Exception('Fileset is empty. Nothing to retrieve.');
+            return;
+        }
+
+        if (! file_prepare_directory($target_file_path, FILE_CREATE_DIRECTORY)) {
+            throw new \Exception('Failed to create folder for download: ' . $target_file_path . '.');
+            return;
+        }
+
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+
+        $saved_file_paths = [];
+        foreach ($file_ids as $file_id => $file_name) {
+
+            $target_file = $sdllc_client->downloadFile($project_id, $file_id);
+            $target_file_name = $target_file_path . '/' . $file_name['language'] . '_' . $file_name['name'];
+            $saved_file_path = file_save_data($target_file, $target_file_name, FILE_EXISTS_REPLACE);
+
+            if (! $saved_file_path) {
+                throw new \Exception('Failed to retrieve to translated File');
+                continue;
+            }
+
+            $saved_file_paths[] = $saved_file_path;
+        }
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addMessage(t('Failed to retrieve to translated File. Error: @error', [
+            '@error' => $e->getMessage()
+        ]), 'error');
+        return NULL;
+    }
+
+    return $saved_file_paths;
+}
+
+/**
+ * Extracts a zip archive to a local folder.
+ *
+ * @param string $zip_file_path
+ *            Fullpath to the physical location of the zip archive.
+ * @param string $extracted_path
+ *            Fullpath to the physical location of the extracted folder.
+ *            
+ * @returns array
+ * An array of the full paths of the extracted files
+ */
+function sdllc_helper_extract_zip($zip_file_path, $extracted_path)
+{
+    $zip = new \ZipArchive();
+
+    if (is_dir($extracted_path)) {
+        if ((substr(PHP_OS, 0, 3) == 'WIN')) {
+            chmod($extracted_path, 0700);
+        }
+
+        // file_unmanaged_delete_recursive($extracted_path);
+    }
+
+    if ($zip->open($zip_file_path) !== TRUE) {
+        $zip->close();
+        return NULL;
+    }
+
+    if ($zip->extractTo($extracted_path) !== TRUE) {
+        $zip->close();
+        return NULL;
+    }
+
+    $zip->close();
+
+
+    $file_system = \Drupal::service('file_system');
+    $path = $file_system->realpath($extracted_path);
+
+    $extracted_files = sdllc_helper_get_files_from_folder($path);
+
+    return $extracted_files;
+}
+
+/**
+ * Retrieves a list of files from a folder.
+ */
+function sdllc_helper_get_files_from_folder($folder)
+{
+
+    // Open the folder.
+    $dir_handle = @opendir($folder);
+    $files = [];
+    // Loop through the files.
+    while ($file = readdir($dir_handle)) {
+
+        if ($file == "." || $file == "..") {
+            continue;
+        }
+
+        $files[] = $folder . DIRECTORY_SEPARATOR . $file;
+    }
+    // Close.
+    closedir($dir_handle);
+
+    return $files;
+}
+
+/**
+ * Approves a project.
+ */
+function sdllc_helper_approve_project($client_id, $client_secret, $username, $password, $sdllc_url, $project_id)
+{
+    try {
+
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+
+        $cancel_result = $sdllc_client->approveProject($project_id);
+
+        return count($cancel_result);
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addMessage(t('Failed to approve project. Error: @error', [
+            '@error' => $e->getMessage()
+        ]), 'error');
+        return NULL;
+    }
+}
+
+/**
+ * Cancel a project.
+ */
+function sdllc_helper_cancel_project($client_id, $client_secret, $username, $password, $sdllc_url, $project_id)
+{
+    try {
+
+        $sdllc_client = new MantraTranslationAPI();
+        $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
+
+        $cancel_result = $sdllc_client->cancelProject($project_id);
+
+        return count($cancel_result);
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addMessage(t('Failed to cancel or complete project. Error: @error', [
+            '@error' => $e->getMessage()
+        ]), 'error');
+        return NULL;
+    }
+}
+
+/**
+ * Implements hook_batch_alter().
+ */
+// function tmgmt_sdllc_batch_alter(&$batch)
+// {
+// $url = $batch['source_url']->getRouteName();
+// if ($url == 'entity.tmgmt_job.canonical') {
+// $form_state = $batch['form_state'];
+// $tranlator = $form_state->getValues();
+// $build_info = $form_state->getBuildInfo();
+// if ($build_info['form_id'] == 'tmgmt_job_edit_form' && $tranlator['translator'] == 'sdllc') {
+// foreach ($batch['sets'] as &$set) {
+// $set['finished'] = 'sdllc_helper_create_batch_project';
+// }
+// }
+// }
+// }
+
+/**
+ * Implements hook_form_alter().
+ */
+function tmgmt_sdllc_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+    if ($form_id == 'tmgmt_job_edit_form') {
+        // Force batch even on single submit.
+        if (! isset($form['translator_wrapper']['submit_all'])) {
+            $form['translator_wrapper']['submit_all'] = [
+                '#type' => 'value',
+                '#value' => 1
+            ];
+        } else {
+            $form['translator_wrapper']['submit_all'] = [
+                '#type' => 'value',
+                '#value' => 1
+            ];
+        }
+    }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function tmgmt_sdllc_entity_type_build(array &$entity_types)
+{
+    /* @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+    $entity_types['tmgmt_translator']->setHandlerClass('list_builder', 'Drupal\tmgmt_sdllc\SdllcTranslatorListBuilder');
+}
+
+/**
+ * Implements hook_cron().
+ */
+function tmgmt_sdllc_cron()
+{
+    $cron_config = \Drupal::configFactory()->getEditable('tmgmt_sdllc.settings');
+    $enabled = $cron_config->get('autoretrieval');
+
+    if (! $enabled) {
+        return;
+    }
+
+    $interval = $cron_config->get('interval');
+    $interval = ! empty($interval) ? $interval : 3600;
+
+    $next_execution = \Drupal::state()->get('tmgmt_sdllc.next_execution');
+    $next_execution = ! empty($next_execution) ? $next_execution : 0;
+    if (\Drupal::time()->getRequestTime() >= $next_execution) {
+        $active_jobs = \Drupal::entityQuery('tmgmt_job')->condition('state', [
+            Job::STATE_ACTIVE,
+            Job::STATE_CONTINUOUS
+        ], 'IN')->execute();
+        foreach ($active_jobs as $active_job_id) {
+            $active_job = Job::load($active_job_id);
+            $translator = $active_job->getTranslatorPlugin();
+            if ($translator instanceof SdllcTranslator) {
+                $jobs_affected[] = $active_job;
+            }
+        }
+        if (! empty($jobs_affected)) {
+
+            $translator = \Drupal::service('plugin.manager.tmgmt.translator')->createUIInstance($active_job->getTranslator()
+                ->getPluginId());
+            $translator->autoRetrieveTranslation($jobs_affected);
+        }
+        \Drupal::state()->set('tmgmt_sdllc.next_execution', \Drupal::time()->getRequestTime() + $interval);
+    }
+}

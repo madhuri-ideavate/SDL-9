@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd">
+ <file original="xliff-core-1.2-strict.xsd" source-language="en-us" target-language="fr" datatype="plaintext" date="2018-10-02T02:10:18Z">
+  <header>
+   <phase-group>
+    <phase tool-id="tmgmt" phase-name="extraction" process-name="extraction" job-id="13"/>
+   </phase-group>
+   <tool tool-id="tmgmt" tool-name="Drupal Translation Management Tools" tool-export-type="SDL XLIFF"/>
+  </header>
+  <body>
+   <group id="12">
+    <note>First node</note>
+    <trans-unit id="12][title][0][value" resname="12][title][0][value">
+     <source xml:lang="en-us"><![CDATA[First node]]></source>
+     <target xml:lang="fr"><![CDATA[First node]]></target>
+    </trans-unit>
+    <trans-unit id="12][path][0][langcode" resname="12][path][0][langcode">
+     <source xml:lang="en-us"><![CDATA[en]]></source>
+     <target xml:lang="fr"><![CDATA[en]]></target>
+     <note>Language Code</note>
+    </trans-unit>
+    <trans-unit id="12][body][0][value" resname="12][body][0][value">
+     <source xml:lang="en-us"><![CDATA[<p>This text can be translated with TMGMT. Use the "translate" Tab and choose "Request Translation" to get started.</p>
+]]></source>
+     <target xml:lang="fr"><![CDATA[<p>This text can be translated with TMGMT. Use the "translate" Tab and choose "Request Translation" to get started.</p>
+]]></target>
+     <note>Text</note>
+    </trans-unit>
+   </group>
+  </body>
+ </file>
+</xliff>

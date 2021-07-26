@@ -1,0 +1,16 @@
+{
+    "name": "iflorian/mantra-library",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Florian Ioan",
+            "email": "iflorian@sdl.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {"MantraLibrary\\": "src/"}
+    }
+}
