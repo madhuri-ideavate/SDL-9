@@ -743,7 +743,8 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
           if (!empty($translated_data)) {
             $job->addTranslatedData($translated_data);
             $job->addMessage('Successfully imported file (@file).', [
-              '@file' => drupal_basename($file)
+              // drupal_basename Depricated SDLCON-34
+              '@file' => \Drupal::service('file_system')->basename($file)
             ]);
           } else {
             $job->addMessage('File import failed with the following message: @message', [
