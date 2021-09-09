@@ -344,7 +344,8 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
 
                 if (file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
                     $itemData = $export->exportJobItem($item);
-                    $file_xlf = file_save_data($itemData, $path_xlf, FILE_EXISTS_REPLACE);
+                    //SDLCON-33 : FILE_EXISTS_REPLACE is depricated 
+                    $file_xlf = file_save_data($itemData, $path_xlf, \Drupal::service('file_system')::EXISTS_REPLACE);
                     \Drupal::service('file.usage')->add($file_xlf, 'tmgmt_sdllc', 'tmgmt_job', $job->id());
 
                     $files[$file_xlf->getFilename()] = $path_xlf;

@@ -247,7 +247,8 @@ function sdllc_helper_download_project_quote($client_id, $client_secret, $userna
         $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
 
         $project_quote = $sdllc_client->getProjectQuote($project_id);
-        $saved_file_path = file_save_data($project_quote, $quote_file_path, FILE_EXISTS_REPLACE);
+        // SDLCON-33 : FILE_EXISTS_REPLACE is depricated
+        $saved_file_path = file_save_data($project_quote, $quote_file_path, \Drupal::service('file_system')::EXISTS_REPLACE);
 
       \Drupal::messenger()->addMessage(t('Translation quote downloaded successfully. Quote file can be retrieved <a href="@link">here</a>.', [
             '@link' => file_create_url($quote_file_path)
@@ -275,7 +276,7 @@ function sdllc_helper_download_target($client_id, $client_secret, $username, $pa
 
         $target_zip = $sdllc_client->downloadTargetZip($project_id);
 
-        $saved_file_path = file_save_data($target_zip, $target_file_path, FILE_EXISTS_REPLACE);
+        $saved_file_path = file_save_data($target_zip, $target_file_path, S_REPLACE);
 
         if (! $saved_file_path) {
             throw new \Exception('The files were not saved');
@@ -314,7 +315,7 @@ function sdllc_helper_download_target_no_zip($client_id, $client_secret, $userna
 
             $target_file = $sdllc_client->downloadFile($project_id, $file_id);
             $target_file_name = $target_file_path . '/' . $file_name['language'] . '_' . $file_name['name'];
-            $saved_file_path = file_save_data($target_file, $target_file_name, FILE_EXISTS_REPLACE);
+            $saved_file_path = file_save_data($target_file, $target_file_name, S_REPLACE);
 
             if (! $saved_file_path) {
                 throw new \Exception('Failed to retrieve to translated File');
