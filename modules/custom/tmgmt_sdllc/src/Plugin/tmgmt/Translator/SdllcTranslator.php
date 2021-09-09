@@ -17,6 +17,8 @@ use Drupal\tmgmt_sdllc\Model\Credentials;
 use Drupal\tmgmt_sdllc\Helper\LanguageMapHelper;
 use Drupal\tmgmt_sdllc\Helper\JobHelper;
 use Drupal\tmgmt_sdllc\Model\ProjectId;
+//SDLCON-32
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * SDL Language Cloud translator plugin.
@@ -70,11 +72,15 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
      * @param array $plugin_definition
      *            The plugin implementation definition.
      */
-    public function __construct(ClientInterface $client, array $configuration, $plugin_id, array $plugin_definition)
+    //SDLCON-32
+    protected $fileSystem;
+
+    public function __construct(ClientInterface $client, array $configuration, $plugin_id, array $plugin_definition,FileSystemInterface $file_system)
     {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
 
         $this->client = $client;
+        $this->fileSystem = $file_system; //SDLCON-32
     }
 
     /**
@@ -342,8 +348,7 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
 
                 $dirname = dirname($path_xlf);
 
-                if (file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
-                    $itemData = $export->exportJobItem($item);
+                if ($this->fileSystem->prepareDirectory($dirname, FileSystemInterface::CREATE_DIRECTORY)) {                    $itemData = $export->exportJobItem($item);
                     //SDLCON-33 : FILE_EXISTS_REPLACE is depricated 
                     $file_xlf = file_save_data($itemData, $path_xlf, \Drupal::service('file_system')::EXISTS_REPLACE);
                     \Drupal::service('file.usage')->add($file_xlf, 'tmgmt_sdllc', 'tmgmt_job', $job->id());

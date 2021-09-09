@@ -301,7 +301,7 @@ function sdllc_helper_download_target_no_zip($client_id, $client_secret, $userna
             throw new \Exception('Fileset is empty. Nothing to retrieve.');
             return;
         }
-
+//TODO SDLCON-32
         if (! file_prepare_directory($target_file_path, FILE_CREATE_DIRECTORY)) {
             throw new \Exception('Failed to create folder for download: ' . $target_file_path . '.');
             return;
