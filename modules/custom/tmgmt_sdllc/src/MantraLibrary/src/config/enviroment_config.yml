@@ -14,10 +14,10 @@ default_config:
 	FILE_UPLOAD_URI = 'tm4lc/api/v1/files/{projectOptionsId}';
 	UPLOADED_FILE_URI = 'tm4lc/api/v1/files/{projectOptionsId}';
 	CREATE_PROJECT_URI = '/tm4lc/api/v1/projects';
-	APPROVE_PROJECT_URI = '/tm4lc/api/v1/projects/{projectId}';
-	PROJECT_STATUS_URI = '/tm4lc/api/v1/projects/{projectId}';
-	DOWNLOAD_FILE_URI = '/tm4lc/api/v1/files/{projectId}/{fileId}';
-	PROJECT_QUOTE_URI = '/tm4lc/api/v1/projects/{projectId}/quote/{format}';
+	APPROVE_PROJECT_URI = 'tm4lc/api/v1/projects/{projectId}';
+	PROJECT_STATUS_URI = 'tm4lc/api/v1/projects/{projectId}';
+	DOWNLOAD_FILE_URI = 'tm4lc/api/v1/files/{projectId}/{fileId}';
+	PROJECT_QUOTE_URI = 'tm4lc/api/v1/projects/{projectId}/quote/';
 	PROJECTS_LIST_URI = 'tm4lc/api/v1/projects';
 	CANCEL_PROJECT_URI = '/tm4lc/api/v1/projects/{projectId}';
-	DOWNLOAD_TARGET_ZIP_URI = '/tm4lc/api/v1/projects/{projectId}/zip?types=TargetFiles';
+	DOWNLOAD_TARGET_ZIP_URI = 'tm4lc/api/v1/projects/{projectId}/zip?types=TargetFiles';

@@ -26,17 +26,17 @@ class ConfigModel
 
     const CREATE_PROJECT_URI = '/tm4lc/api/v1/projects';
 
-    const APPROVE_PROJECT_URI = '/tm4lc/api/v1/projects/{projectId}';
+    const APPROVE_PROJECT_URI = 'tm4lc/api/v1/projects/{projectId}';
 
-    const PROJECT_STATUS_URI = '/tm4lc/api/v1/projects/{projectId}';
+    const PROJECT_STATUS_URI = 'tm4lc/api/v1/projects/{projectId}';
 
-    const DOWNLOAD_FILE_URI = '/tm4lc/api/v1/files/{projectId}/{fileId}';
+    const DOWNLOAD_FILE_URI = 'tm4lc/api/v1/files/{projectId}/{fileId}';
 
-    const PROJECT_QUOTE_URI = '/tm4lc/api/v1/projects/{projectId}/quote/{format}';
+    const PROJECT_QUOTE_URI = 'tm4lc/api/v1/projects/{projectId}/quote/{format}';
 
     const PROJECTS_LIST_URI = 'tm4lc/api/v1/projects';
 
     const CANCEL_PROJECT_URI = '/tm4lc/api/v1/projects/{projectId}';
 
-    const DOWNLOAD_TARGET_ZIP_URI = '/tm4lc/api/v1/projects/{projectId}/zip?types=TargetFiles';
+    const DOWNLOAD_TARGET_ZIP_URI = 'tm4lc/api/v1/projects/{projectId}/zip?types=TargetFiles';
 }
