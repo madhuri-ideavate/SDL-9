@@ -317,7 +317,8 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
      */
     private function convertToUtc($time)
     {
-        $date = new DrupalDateTime($time, new \DateTimeZone(drupal_get_user_timezone()));
+        //SDLCON-31 : Depricated drupal_get_user_timezone
+        $date = new DrupalDateTime($time, new \DateTimeZone(date_default_timezone_get()));
         $date->setTimezone(new \DateTimeZone('UTC'));
 
         return $date;

@@ -45,15 +45,18 @@ class CheckoutSettingsFormModel
       if (isset($date) && !empty($date)){
         $auxData = $date;
       }
-        $timeStamp = new \DateTime(drupal_get_user_timezone());
+        //SDLCON-31 : Depricated drupal_get_user_timezone
+        $timeStamp = new \DateTime(date_default_timezone_get());
         $timeStamp->add(new \DateInterval('P7D'));
-        date_default_timezone_set(drupal_get_user_timezone());
+        //SDLCON-31 : Depricated drupal_get_user_timezone
+        date_default_timezone_set(date_default_timezone_get());
         return [
             '#type' => 'date',
             '#title' => t('Due Date'),
             '#default_value' => $auxData,
             '#date_increment' => 1,
-            '#date_timezone' => drupal_get_user_timezone(),
+            //SDLCON-31 : Depricated drupal_get_user_timezone
+            '#date_timezone' => date_default_timezone_get(),
             '#date_format' => 'Y-m-d',
             '#datepicker_options' => array('maxDate' => 30),
             '#description' => t('The due date for the SDL Translation Management Project.')
