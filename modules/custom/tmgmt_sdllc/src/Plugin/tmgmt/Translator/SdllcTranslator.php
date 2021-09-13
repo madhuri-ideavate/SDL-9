@@ -17,13 +17,11 @@ use Drupal\tmgmt_sdllc\Model\Credentials;
 use Drupal\tmgmt_sdllc\Helper\LanguageMapHelper;
 use Drupal\tmgmt_sdllc\Helper\JobHelper;
 use Drupal\tmgmt_sdllc\Model\ProjectId;
-//SDLCON-32
-use Drupal\Core\File\FileSystemInterface;
 
 /**
  * SDL Language Cloud translator plugin.
  *
- * @TranslatorPlugin(
+ * @TranslatorPlugin
  * id = "sdllc",
  * label = @Translation("SDL Translation Management"),
  * description = @Translation("SDL Translation Management connector."),
@@ -317,7 +315,7 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
      */
     private function convertToUtc($time)
     {
-        //SDLCON-31 : Depricated drupal_get_user_timezone
+        //Update Drupal 9.2.0 : Depricated drupal_get_user_timezone in drupal:8.8.0 and is removed from drupal:9.0.0. Use date_default_timezone_get() instead.
         $date = new DrupalDateTime($time, new \DateTimeZone(date_default_timezone_get()));
         $date->setTimezone(new \DateTimeZone('UTC'));
 
@@ -350,7 +348,7 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
                 $dirname = dirname($path_xlf);
 
                 if ($this->fileSystem->prepareDirectory($dirname, FileSystemInterface::CREATE_DIRECTORY)) {                    $itemData = $export->exportJobItem($item);
-                    //SDLCON-33 : FILE_EXISTS_REPLACE is depricated 
+                // Update Drupal 9.2.0 : FILE_EXISTS_REPLACE Deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
                     $file_xlf = file_save_data($itemData, $path_xlf, \Drupal::service('file_system')::EXISTS_REPLACE);
                     \Drupal::service('file.usage')->add($file_xlf, 'tmgmt_sdllc', 'tmgmt_job', $job->id());
 

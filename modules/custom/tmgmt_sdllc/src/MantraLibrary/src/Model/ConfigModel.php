@@ -32,7 +32,7 @@ class ConfigModel
 
     const DOWNLOAD_FILE_URI = 'tm4lc/api/v1/files/{projectId}/{fileId}';
 
-    const PROJECT_QUOTE_URI = 'tm4lc/api/v1/projects/{projectId}/quote/{format}';
+    const PROJECT_QUOTE_URI = 'tm4lc/api/v1/projects/{projectId}/quote/';
 
     const PROJECTS_LIST_URI = 'tm4lc/api/v1/projects';
 

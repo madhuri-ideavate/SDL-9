@@ -743,7 +743,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
           if (!empty($translated_data)) {
             $job->addTranslatedData($translated_data);
             $job->addMessage('Successfully imported file (@file).', [
-              // drupal_basename Depricated SDLCON-34
+              //Update Drupal 9.2.0 : Depricated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\FileSystem::basename().
               '@file' => \Drupal::service('file_system')->basename($file)
             ]);
           } else {

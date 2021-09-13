@@ -247,7 +247,7 @@ function sdllc_helper_download_project_quote($client_id, $client_secret, $userna
         $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
 
         $project_quote = $sdllc_client->getProjectQuote($project_id);
-        // SDLCON-33 : FILE_EXISTS_REPLACE is depricated
+        //Update Drupal 9.2.0 : FILE_EXISTS_REPLACE Deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
         $saved_file_path = file_save_data($project_quote, $quote_file_path, \Drupal::service('file_system')::EXISTS_REPLACE);
 
       \Drupal::messenger()->addMessage(t('Translation quote downloaded successfully. Quote file can be retrieved <a href="@link">here</a>.', [
@@ -275,8 +275,8 @@ function sdllc_helper_download_target($client_id, $client_secret, $username, $pa
         $sdllc_client->connect($username, $password, $client_id, $client_secret, $sdllc_url);
 
         $target_zip = $sdllc_client->downloadTargetZip($project_id);
-
-        $saved_file_path = file_save_data($target_zip, $target_file_path, S_REPLACE);
+        //Update Drupal 9.2.0 : FILE_EXISTS_REPLACE Deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
+        $saved_file_path = file_save_data($target_zip, $target_file_path, \Drupal::service('file_system')::EXISTS_REPLACE);
 
         if (! $saved_file_path) {
             throw new \Exception('The files were not saved');
@@ -301,8 +301,8 @@ function sdllc_helper_download_target_no_zip($client_id, $client_secret, $userna
             throw new \Exception('Fileset is empty. Nothing to retrieve.');
             return;
         }
-//TODO SDLCON-32
-        if (! file_prepare_directory($target_file_path, FILE_CREATE_DIRECTORY)) {
+        //Update Drupal 9.2.0 : Depricated in drupal:8.7.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY.
+        if (! \Drupal::service('file_system')->prepareDirectory($target_file_path, \Drupal::service('file_system')::CREATE_DIRECTORY)) {
             throw new \Exception('Failed to create folder for download: ' . $target_file_path . '.');
             return;
         }
@@ -315,7 +315,8 @@ function sdllc_helper_download_target_no_zip($client_id, $client_secret, $userna
 
             $target_file = $sdllc_client->downloadFile($project_id, $file_id);
             $target_file_name = $target_file_path . '/' . $file_name['language'] . '_' . $file_name['name'];
-            $saved_file_path = file_save_data($target_file, $target_file_name, S_REPLACE);
+            //Update Drupal 9.2.0 : FILE_EXISTS_REPLACE Deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
+            $saved_file_path = file_save_data($target_file, $target_file_name, \Drupal::service('file_system')::EXISTS_REPLACE);
 
             if (! $saved_file_path) {
                 throw new \Exception('Failed to retrieve to translated File');
