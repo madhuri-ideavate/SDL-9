@@ -73,7 +73,7 @@ class ConfigurationFormModel
             '#type' => 'password',
             '#title' => t('Password'),
             '#default_value' => $data,
-            '#description' => $data ? t('SDL Translation Management Password.') : t('Please enter a password.'),
+            '#description' => $data ? t('RWS Translation Management Password.') : t('Please enter a password.'),
             '#required' => TRUE
         ];
     }
@@ -84,7 +84,7 @@ class ConfigurationFormModel
             '#type' => 'textfield',
             '#title' => t('Username'),
             '#default_value' => $data,
-            '#description' => t('SDL Translation Management Username.'),
+            '#description' => t('RWS Translation Management Username.'),
             '#required' => TRUE,
             '#placeholder' => 'username'
         ];
@@ -96,7 +96,7 @@ class ConfigurationFormModel
             '#type' => 'textfield',
             '#title' => t('Client Secret'),
             '#default_value' => $data,
-            '#description' => t('SDL Translation Management Client Secret.'),
+            '#description' => t('RWS Translation Management Client Secret.'),
             '#required' => TRUE,
             '#placeholder' => 'client secret'
         ];
@@ -108,7 +108,7 @@ class ConfigurationFormModel
             '#type' => 'textfield',
             '#title' => t('Client ID'),
             '#default_value' => $data,
-            '#description' => t('SDL Translation Management Client ID.'),
+            '#description' => t('RWS Translation Management Client ID.'),
             '#required' => TRUE,
             '#placeholder' => 'client id'
         ];
@@ -120,7 +120,7 @@ class ConfigurationFormModel
             '#type' => 'textfield',
             '#title' => t('URL'),
             '#default_value' => $data,
-            '#description' => t('SDL Translation Management URL.'),
+            '#description' => t('RWS Translation Management URL.'),
             '#required' => TRUE,
             '#placeholder' => 'https://languagecloud.sdl.com'
         ];

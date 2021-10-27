@@ -493,9 +493,17 @@ class SdlXliff extends \XMLWriter implements FormatInterface {
       // gets
       // url encoded due to the temporary://. This is a PHP bug, see
       // https://bugs.php.net/bug.php?id=61469
+      //Update Drupal 9.2.5 : LC containing nested folders for particular target langugae 
+      //TODO when single project create for multiple language
       if ($is_file) {
-        $xml_string = file_get_contents($imported_file);
-      }
+        $fileTmp = glob($imported_file.'/*.xlf');
+        if(count($fileTmp) == 1){
+          $xml_string = file_get_contents($fileTmp[0]);
+        }
+        else{
+          $xml_string = file_get_contents($imported_file);
+        }
+       }
 
       $this->importedXML = simplexml_load_string($xml_string);
 

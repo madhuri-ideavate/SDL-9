@@ -10,6 +10,7 @@ use Drupal\tmgmt\TranslatorInterface;
 use Drupal\tmgmt\TranslatorPluginBase;
 use Drupal\tmgmt_sdllc\Plugin\tmgmt\Format\SdlXliff;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\File\FileSystemInterface;
 use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\tmgmt\ContinuousTranslatorInterface;
@@ -18,13 +19,14 @@ use Drupal\tmgmt_sdllc\Helper\LanguageMapHelper;
 use Drupal\tmgmt_sdllc\Helper\JobHelper;
 use Drupal\tmgmt_sdllc\Model\ProjectId;
 
+
 /**
- * SDL Language Cloud translator plugin.
+ * RWS Language Cloud translator plugin.
  *
  * @TranslatorPlugin(
  * id = "sdllc",
- * label = @Translation("SDL Translation Management"),
- * description = @Translation("SDL Translation Management connector."),
+ * label = @Translation("RWS Translation Management"),
+ * description = @Translation("RWS Translation Management connector."),
  * ui = "Drupal\tmgmt_sdllc\SdllcTranslatorUi"
  * )
  */
@@ -311,7 +313,8 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
      */
     private function convertToUtc($time)
     {
-        $date = new DrupalDateTime($time, new \DateTimeZone(drupal_get_user_timezone()));
+        //Update Drupal 9.2.0 : Depricated drupal_get_user_timezone in drupal:8.8.0 and is removed from drupal:9.0.0. Use date_default_timezone_get() instead.
+        $date = new DrupalDateTime($time, new \DateTimeZone(date_default_timezone_get()));
         $date->setTimezone(new \DateTimeZone('UTC'));
 
         return $date;
@@ -341,10 +344,10 @@ class SdllcTranslator extends TranslatorPluginBase implements ContainerFactoryPl
                 $path_xlf = JobHelper::sdllc_helper_get_job_folder($job) . '/' . $name . '.' . 'xlf';
 
                 $dirname = dirname($path_xlf);
-
-                if (file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
-                    $itemData = $export->exportJobItem($item);
-                    $file_xlf = file_save_data($itemData, $path_xlf, FILE_EXISTS_REPLACE);
+                //Update Drupal 9.2.0 : file_prepare_directory is depricated in drupal:8.7.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\FileSystemInterface::prepareDirectory().
+                if (\Drupal::service('file_system')->prepareDirectory($dirname, FileSystemInterface::CREATE_DIRECTORY)) {                    $itemData = $export->exportJobItem($item);
+                //Update Drupal 9.2.0 : FILE_EXISTS_REPLACE Deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
+                    $file_xlf = file_save_data($itemData, $path_xlf, \Drupal::service('file_system')::EXISTS_REPLACE);
                     \Drupal::service('file.usage')->add($file_xlf, 'tmgmt_sdllc', 'tmgmt_job', $job->id());
 
                     $files[$file_xlf->getFilename()] = $path_xlf;

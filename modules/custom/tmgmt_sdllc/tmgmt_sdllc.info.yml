@@ -1,9 +1,9 @@
-name: SDL Language Cloud 8.x-4.0.0
-description: SDL translator plugin for SDL Language Cloud
+name: RWS Language Cloud 9.2-x
+description: RWS translator plugin for RWS Language Cloud
 type: module
 package: Translation Management
 #core: 8.x
-core: '8.x'
+core_version_requirement: ^8.8 || ^9
 dependencies:
-  - tmgmt:tmgmt (>=8.x-1.7)
-  - drupal:datatables
+  - tmgmt:tmgmt (>=8.x-1.12)
+  - drupal:datatables (>=2.0.0)

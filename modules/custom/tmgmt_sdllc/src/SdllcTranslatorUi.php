@@ -28,7 +28,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state)
   {
-    LogWriter::info('Initializing SDL Configuration for Provider page');
+    LogWriter::info('Initializing RWS Configuration for Provider page');
 
     $form = parent::buildConfigurationForm($form, $form_state);
 
@@ -44,7 +44,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
     $form['xliff_processing'] = $configModel->xliff_processing;
     $form['sdllc_download_as_zip'] = $configModel->sdllc_download_as_zip;
 
-    LogWriter::info('Finishing SDL Configuration for Provider page');
+    LogWriter::info('Finishing RWS Configuration for Provider page');
 
     return $form;
   }
@@ -149,7 +149,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
 
     $form = [
       '#type' => 'details',
-      '#title' => t('SDL Translation Management Information'),
+      '#title' => t('RWS Translation Management Information'),
       '#open' => TRUE
     ];
 
@@ -491,20 +491,20 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
       $job->submitted();
 
       if (!isset($listOfProjectsFromManTra)) {
-        $job->addMessage('Failed to retrieve project statuses from SDL Translation Management.');
+        $job->addMessage('Failed to retrieve project statuses from RWS Translation Management.');
       }
 
       return $listOfProjectsFromManTra;
     } else {
       if (!$project_id) {
-        $job->addMessage('Failed to retrieve SDL Translation Management Project ID.');
+        $job->addMessage('Failed to retrieve RWS Translation Management Project ID.');
         return NULL;
       }
 
       $job_status = sdllc_helper_get_project_status($credentials->clientId, $credentials->clientSecret, $credentials->username, $credentials->password, $credentials->sdllcUrl, $project_id);
 
       if (!isset($job_status)) {
-        $job->addMessage('Failed to retrieve project status from SDL Translation Management.');
+        $job->addMessage('Failed to retrieve project status from RWS Translation Management.');
         return NULL;
       }
 
@@ -527,7 +527,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
     $credentials = new Credentials($job);
 
     if (!$project_id) {
-      $job->addMessage('Failed to retrieve SDL Translation Management Project ID.');
+      $job->addMessage('Failed to retrieve RWS Translation Management Project ID.');
       return NULL;
     }
 
@@ -537,7 +537,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
     $saved_quote_file_path = sdllc_helper_download_project_quote($credentials->clientId, $credentials->clientSecret, $credentials->username, $credentials->password, $credentials->sdllcUrl, $project_id, $quote_file_path);
 
     if (!$saved_quote_file_path) {
-      $job->addMessage('Failed to download project quote from SDL Translation Management.');
+      $job->addMessage('Failed to download project quote from RWS Translation Management.');
       return NULL;
     }
 
@@ -565,7 +565,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
     $credentials = new Credentials($job);
 
     if (!$project_id) {
-      $job->addMessage('Failed to retrieve SDL Translation Management Project ID.');
+      $job->addMessage('Failed to retrieve RWS Translation Management Project ID.');
       return NULL;
     }
 
@@ -589,7 +589,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
       $saved_target_file_path = sdllc_helper_download_target($credentials->clientId, $credentials->clientSecret, $credentials->username, $credentials->password, $credentials->sdllcUrl, $project_id, $target_file_path);
 
       if (!$saved_target_file_path) {
-        $job->addMessage('Failed to download target file from SDL Translation Management.');
+        $job->addMessage('Failed to download target file from RWS Translation Management.');
         return NULL;
       }
 
@@ -633,7 +633,7 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
       }
 
       if (count($savedTargetFilePaths) < 1) {
-        $job->addMessage('No target file saved from SDL Translation Management.');
+        $job->addMessage('No target file saved from RWS Translation Management.');
       }
 
       $target_files = [];
@@ -652,25 +652,25 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
       return $target_files;
     } else {
       if (!$project_id) {
-        $job->addMessage('Failed to retrieve SDL Translation Management Project ID.');
+        $job->addMessage('Failed to retrieve RWS Translation Management Project ID.');
         return NULL;
       }
 
       if (!$job_status) {
-        $job->addMessage('Failed to retrieve the project status from SDL Translation Management for download.');
+        $job->addMessage('Failed to retrieve the project status from RWS Translation Management for download.');
         return NULL;
       }
 
       $file_ids = $this->getFileIds($job_status);
 
       if (count($file_ids) < 0) {
-        $job->addMessage('No target file retrieved from cach or SDL Translation Management.');
+        $job->addMessage('No target file retrieved from cach or RWS Translation Management.');
         return NULL;
       }
       $saved_target_file_paths = sdllc_helper_download_target_no_zip($credentials->clientId, $credentials->clientSecret, $credentials->username, $credentials->password, $credentials->sdllcUrl, $project_id, $file_ids, $target_file_path);
 
       if (count($saved_target_file_paths) < 1) {
-        $job->addMessage('No target file saved from SDL Translation Management.');
+        $job->addMessage('No target file saved from RWS Translation Management.');
         return NULL;
       }
 
@@ -743,7 +743,8 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
           if (!empty($translated_data)) {
             $job->addTranslatedData($translated_data);
             $job->addMessage('Successfully imported file (@file).', [
-              '@file' => drupal_basename($file)
+              //Update Drupal 9.2.0 : Depricated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\FileSystem::basename().
+              '@file' => \Drupal::service('file_system')->basename($file)
             ]);
           } else {
             $job->addMessage('File import failed with the following message: @message', [
@@ -835,14 +836,14 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
     $credentials = new Credentials($job);
 
     if (!$project_id) {
-      $job->addMessage('Failed to retrieve SDL Translation Management Project ID.');
+      $job->addMessage('Failed to retrieve RWS Translation Management Project ID.');
       return NULL;
     }
 
     $approve_result = sdllc_helper_approve_project($credentials->clientId, $credentials->clientSecret, $credentials->username, $credentials->password, $credentials->sdllcUrl, $project_id);
 
     if ($approve_result != 1) {
-      $job->addMessage('Failed to approve the project from SDL Translation Management.');
+      $job->addMessage('Failed to approve the project from RWS Translation Management.');
       return NULL;
     }
 
@@ -863,14 +864,14 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
     $credentials = new Credentials($job);
 
     if (!$project_id) {
-      $job->addMessage('Failed to retrieve SDL Translation Management Project ID.');
+      $job->addMessage('Failed to retrieve RWS Translation Management Project ID.');
       return NULL;
     }
 
     $cancel_result = sdllc_helper_cancel_project($credentials->clientId, $credentials->clientSecret, $credentials->username, $credentials->password, $credentials->sdllcUrl, $project_id);
 
     if ($cancel_result != 1) {
-      $job->addMessage(t('Failed to cancel the project from SDL Translation Management.', [
+      $job->addMessage(t('Failed to cancel the project from RWS Translation Management.', [
         '@op' => $project_status > 2 ? t('completed') : t('cancelled')
       ]));
       return NULL;
@@ -897,11 +898,11 @@ class SdllcTranslatorUi extends TranslatorPluginUiBase
         $job->save();
       }
 
-      $job->finished(t('Project has been @op in SDL Translation Management.', [
+      $job->finished(t('Project has been @op in RWS Translation Management.', [
         '@op' => t('completed')
       ]), [], 'Completed');
     } else {
-      $job->aborted(t('Project has been @op in SDL Translation Management.', [
+      $job->aborted(t('Project has been @op in RWS Translation Management.', [
         '@op' => t('cancelled')
       ]), [], 'Cancelled');
     }
