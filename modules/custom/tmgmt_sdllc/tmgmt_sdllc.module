@@ -144,7 +144,7 @@ function sdllc_helper_create_batch_project($jobs)
     $token_response = $sdllc_client->getAuthorizationToken();
 
     if (! $sdllc_client->isError()) {
-        $job->setState(Job::STATE_UNPROCESSED, 'Error submitting jobs. Failed to create SDL Translation Management project.');
+        $job->setState(Job::STATE_UNPROCESSED, 'Error submitting jobs. Failed to create RWS Translation Management project.');
       \Drupal::messenger()->addMessage(t('Failed to retrieve AuthorizationToken for @username Error: @error', [
             '@username' => $username,
             '@error' => $sdllc_client->getLastError()
@@ -170,7 +170,7 @@ function sdllc_helper_create_batch_project($jobs)
     }
 
     if (! isset($create_project_response) && ! $create_project_response->getProjectId()) {
-        $job->setState(Job::STATE_UNPROCESSED, 'Error submitting jobs. Failed to create SDL Translation Management project.');
+        $job->setState(Job::STATE_UNPROCESSED, 'Error submitting jobs. Failed to create RWS Translation Management project.');
         return;
     }
 
@@ -208,7 +208,7 @@ function sdllc_helper_create_batch_project($jobs)
             $portal_job->get('settings')->__set('sdllc_project_id', $projectCreationResponse);
             $portal_job->get('settings')->__set('sdllc_suppress_check', $suppress_option);
 
-            $portal_job->submitted('Job submitted. SDL Translation Management ID: @id', [
+            $portal_job->submitted('Job submitted. RWS Translation Management ID: @id', [
                 '@id' => $create_project_response->getProjectId()
             ]);
         }

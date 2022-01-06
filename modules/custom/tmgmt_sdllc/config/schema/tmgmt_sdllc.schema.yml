@@ -3,7 +3,7 @@ tmgmt.translator.settings.sdllc:
   mapping:
     sdllc_url:
       type: string
-      label: 'SDL Language Cloud URL'
+      label: 'RWS Language Cloud URL'
       default: 'https://languagecloud.sdl.com'
     sdllc_client_id:
       type: string
@@ -13,13 +13,13 @@ tmgmt.translator.settings.sdllc:
       label: 'Client Secret'
     sdllc_username:
       type: string
-      label: 'SDL Language Cloud Username'
+      label: 'RWS Language Cloud Username'
     sdllc_password:
       type: string
-      label: 'SDL Language Cloud Password'
+      label: 'RWS Language Cloud Password'
     # sdllc_project_options_id:
     #   type: string
-    #   label: 'SDL Language Cloud Project Creation Options ID'
+    #   label: 'RWS Language Cloud Project Creation Options ID'
     sdllc_project_options:
       type: string
-      label: 'SDL Language Cloud Project Creation Options Name'
+      label: 'RWS Language Cloud Project Creation Options Name'

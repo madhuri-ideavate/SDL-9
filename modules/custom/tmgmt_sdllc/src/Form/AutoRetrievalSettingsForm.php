@@ -93,7 +93,7 @@ class AutoRetrievalSettingsForm extends ConfigFormBase {
     
     $next_execution = !empty($next_execution) ? $next_execution : $this->time
       ->getRequestTime();
-    // Deprecate date_iso8601($timestamp) in favour of PHP date('c', $timestamp)
+    //Update Drupal 9.2.0 : Deprecate date_iso8601($timestamp) in favour of PHP date('c', $timestamp)
     $args = [
       '%time' => date('c', $this->state
         ->get('tmgmt_sdllc.next_execution')),

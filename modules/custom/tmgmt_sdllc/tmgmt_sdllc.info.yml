@@ -1,5 +1,5 @@
-name: SDL Language Cloud 8.x-4.0.0
-description: SDL translator plugin for SDL Language Cloud
+name: RWS Language Cloud 9.2-x
+description: RWS translator plugin for RWS Language Cloud (Version :- tmgmt_sdllc_RWS_1.0.0)
 type: module
 package: Translation Management
 #core: 8.x

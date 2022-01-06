@@ -24,7 +24,7 @@ class CheckoutSettingsFormModel
             '#title' => t('Project Name'),
             '#maxlength' => 50,
             '#default_value' => $data,
-            '#description' => t('The name for the SDL Translation Management project.')
+            '#description' => t('The name for the RWS Translation Management project.')
         ];
     }
 
@@ -34,7 +34,7 @@ class CheckoutSettingsFormModel
             '#type' => 'textarea',
             '#title' => t('Project Description'),
             '#rows' => 2,
-            '#description' => t('The description for the SDL Translation Management project.'),
+            '#description' => t('The description for the RWS Translation Management project.'),
             '#maxlength' => 255
         ];
     }
@@ -59,7 +59,7 @@ class CheckoutSettingsFormModel
              '#date_timezone' => date_default_timezone_get(),
             '#date_format' => 'Y-m-d',
             '#datepicker_options' => array('maxDate' => 30),
-            '#description' => t('The due date for the SDL Translation Management Project.')
+            '#description' => t('The due date for the RWS Translation Management Project.')
         ];
     }
 }
